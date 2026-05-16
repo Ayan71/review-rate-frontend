@@ -32,7 +32,6 @@ const CompanyCard = ({ company, onDetailReview }) => {
           <p className="company-description">{company.description}</p>
 
           <div className="company-rating" aria-label="Rating and review count">
-            <span className="rating-inline-label">Avg rating</span>
             <RatingStars rating={rating} />
             <span className="review-count-sep" aria-hidden>
               ·

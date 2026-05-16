@@ -6,7 +6,7 @@ export const DEMO_REVIEWS = [
     title: "Smooth delivery and clear updates",
     comment:
       "Team ne timeline stick kiya, weekly sync useful tha. Production rollout without drama.",
-    reviewerName: "Demo — Priya S.",
+    reviewerName: "Priya S.",
     createdAt: "2026-05-10T10:00:00.000Z",
   },
   {
@@ -15,7 +15,7 @@ export const DEMO_REVIEWS = [
     title: "Strong work, onboarding thoda slow",
     comment:
       "Quality achhi hai. First two weeks me documentation aur access thoda faster ho sakta tha.",
-    reviewerName: "Demo — Rahul K.",
+    reviewerName: "Rahul K.",
     createdAt: "2026-05-02T14:30:00.000Z",
   },
 ];

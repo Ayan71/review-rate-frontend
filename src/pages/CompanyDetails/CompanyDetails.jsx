@@ -197,12 +197,7 @@ const CompanyDetails = () => {
 
             <div className="reviews-section">
               <h2>Recent Reviews</h2>
-              {showingDemoReviews && (
-                <p className="reviews-demo-hint">
-                  Sample reviews (demo) — yahan real reviews tab dikhenge jab backend par
-                  submit ho jayenge.
-                </p>
-              )}
+           
               <ul className="reviews-list">
                 {reviewsToDisplay.map((rev) => (
                   <li key={rev._id ?? rev.id} className="review-card">
