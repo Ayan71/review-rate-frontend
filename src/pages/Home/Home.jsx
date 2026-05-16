@@ -108,7 +108,7 @@ const Home = () => {
       await loadCompanies(selectedCity, sortBy);
     } catch (error) {
       console.error("Error adding company:", error);
-      alert("Failed to add company.");
+    alert("You must be logged in to add a company.");
     }
   };
 
