@@ -1,0 +1,170 @@
+.company-details {
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+
+.details-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.back-btn {
+  margin-bottom: 24px;
+}
+
+.details-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.details-header {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 30px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.details-logo {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 48px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.details-title h1 {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  color: #1a1a1a;
+}
+
+.details-address {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.details-description {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.details-body {
+  padding: 30px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-item label {
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 16px;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+.badge {
+  background-color: #f0f0f0;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #7c3aed;
+  display: inline-block;
+}
+
+.reviews-section {
+  margin-top: 30px;
+}
+
+.reviews-section h2 {
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  color: #1a1a1a;
+}
+
+.review-placeholder {
+  background-color: #f8f8f8;
+  padding: 30px;
+  border-radius: 8px;
+  text-align: center;
+  color: #999;
+  margin-bottom: 20px;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+.no-results {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 16px;
+  color: #999;
+  background-color: #ffffff;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .details-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .details-logo {
+    width: 100px;
+    height: 100px;
+    font-size: 36px;
+  }
+
+  .details-title h1 {
+    font-size: 22px;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .details-header,
+  .details-body {
+    padding: 20px;
+  }
+}
