@@ -31,11 +31,11 @@ const Home = () => {
       const cityFilter = city === "All Cities" ? null : city;
 
       const data = await getAllCompanies(cityFilter, sort);
-      console.log("[v0] Companies loaded:", data);
+      console.log(" Companies loaded:", data);
 
       setCompanies(data);
     } catch (error) {
-      console.error("[v0] Error fetching companies:", error);
+      console.error(" Error fetching companies:", error);
       alert("Unable to fetch companies. Please check your backend connection.");
     } finally {
       setLoading(false);
@@ -58,11 +58,11 @@ const Home = () => {
       const cityFilter = selectedCity === "All Cities" ? null : selectedCity;
 
       const data = await searchCompanies(query, cityFilter);
-      console.log("[v0] Search results:", data);
+      console.log(" Search results:", data);
 
       setCompanies(data);
     } catch (error) {
-      console.error("[v0] Error searching companies:", error);
+      console.error(" Error searching companies:", error);
       alert("Search failed. Please try again.");
     } finally {
       setLoading(false);
@@ -76,11 +76,11 @@ const Home = () => {
   const handleAddCompanySubmit = async (newCompany) => {
     try {
       const result = await createCompany(newCompany);
-      console.log("[v0] Company created:", result);
+      console.log(" Company created:", result);
 
       await loadCompanies(selectedCity, sortBy);
     } catch (error) {
-      console.error("[v0] Error adding company:", error);
+      console.error(" Error adding company:", error);
       alert("Failed to add company. Please try again.");
     }
   };

@@ -66,10 +66,10 @@ const Signup = () => {
         formData.password,
         formData.confirmPassword
       );
-      console.log("[v0] Signup successful:", result);
+      console.log(" Signup successful:", result);
       navigate("/");
     } catch (err) {
-      console.error("[v0] Signup error:", err);
+      console.error(" Signup error:", err);
       setError(
         err.message ||
           err.error ||

@@ -18,12 +18,12 @@ export const loginUser = async (email, password) => {
       password,
     });
 
-    console.log("[v0] Login response:", response.data);
+    console.log(" Login response:", response.data);
 
     // Store token from successful login
     if (response.data.token) {
       localStorage.setItem("authToken", response.data.token);
-      console.log("[v0] Auth token stored");
+      console.log(" Auth token stored");
     }
 
     // Store user data (create user object if not provided by backend)
@@ -33,11 +33,11 @@ export const loginUser = async (email, password) => {
       role: response.data.role || "user",
     };
     localStorage.setItem("user", JSON.stringify(userData));
-    console.log("[v0] User data stored:", userData);
+    console.log(" User data stored:", userData);
 
     return response.data;
   } catch (error) {
-    console.error("[v0] Login error:", error);
+    console.error(" Login error:", error);
     throw error.response?.data || {
       message: "Login failed",
       error: error.message,

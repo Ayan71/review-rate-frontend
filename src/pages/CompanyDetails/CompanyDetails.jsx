@@ -27,29 +27,29 @@ const CompanyDetails = () => {
         const companyData = companies.find((c) => c.id === parseInt(id));
         
         if (companyData) {
-          console.log("[v0] Company loaded:", companyData);
+          console.log(" Company loaded:", companyData);
           setCompany(companyData);
 
           // Fetch review summary
           try {
             const summary = await getReviewSummary(id);
-            console.log("[v0] Review summary loaded:", summary);
+            console.log(" Review summary loaded:", summary);
             setReviewSummary(summary);
           } catch (err) {
-            console.warn("[v0] Could not fetch review summary:", err);
+            console.warn(" Could not fetch review summary:", err);
           }
 
           // Fetch company reviews
           try {
             const reviewsData = await getCompanyReviews(id);
-            console.log("[v0] Company reviews loaded:", reviewsData);
+            console.log(" Company reviews loaded:", reviewsData);
             setReviews(reviewsData);
           } catch (err) {
-            console.warn("[v0] Could not fetch company reviews:", err);
+            console.warn(" Could not fetch company reviews:", err);
           }
         }
       } catch (error) {
-        console.error("[v0] Error fetching company details:", error);
+        console.error(" Error fetching company details:", error);
       } finally {
         setLoading(false);
       }

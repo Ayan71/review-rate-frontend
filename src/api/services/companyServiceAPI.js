@@ -46,11 +46,11 @@ export const createCompany = async (companyData) => {
     // Verify user is authenticated
     const token = localStorage.getItem("authToken");
     if (!token) {
-      console.error("[v0] No auth token found - user must be logged in");
+      console.error(" No auth token found - user must be logged in");
       throw new Error("Authentication required. Please login first.");
     }
 
-    console.log("[v0] Creating company with auth token");
+    console.log(" Creating company with auth token");
 
     // Check if it's FormData or regular object
     const isFormData = companyData instanceof FormData;
@@ -66,7 +66,7 @@ export const createCompany = async (companyData) => {
       if (!companyName || !city || !address || !foundedDate || !description) {
         throw new Error("Missing required fields");
       }
-      console.log("[v0] FormData validation passed");
+      console.log(" FormData validation passed");
     } else {
       const required = ["companyName", "city", "address", "foundedDate", "description"];
       const missing = required.filter((field) => !companyData[field]);
@@ -87,7 +87,7 @@ export const createCompany = async (companyData) => {
       config.headers["Content-Type"] = "multipart/form-data";
     }
 
-    console.log("[v0] Sending company creation request");
+    console.log(" Sending company creation request");
     
     const response = await api.post(
       API_ENDPOINTS.COMPANY.CREATE,
@@ -95,10 +95,10 @@ export const createCompany = async (companyData) => {
       config
     );
     
-    console.log("[v0] Company created successfully:", response.data);
+    console.log(" Company created successfully:", response.data);
     return response.data;
   } catch (error) {
-    console.error("[v0] Error creating company:", error);
+    console.error(" Error creating company:", error);
     throw error.response?.data || {
       message: "Failed to create company",
       error: error.message,

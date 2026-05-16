@@ -110,12 +110,12 @@ const AddCompanyForm = ({ cities, onSubmit, onClose }) => {
         logoColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
       };
 
-      console.log("[v0] Company created with image:", newCompany);
+      console.log(" Company created with image:", newCompany);
       onSubmit(newCompany);
       setLoading(false);
       onClose();
     } catch (err) {
-      console.error("[v0] Error creating company:", err);
+      console.error(" Error creating company:", err);
       setError("Failed to create company. Please try again.");
       setLoading(false);
     }

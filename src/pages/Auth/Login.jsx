@@ -37,10 +37,10 @@ const Login = () => {
     // Call the API to login
     try {
       const result = await loginUser(email, password);
-      console.log("[v0] Login successful:", result);
+      console.log(" Login successful:", result);
       navigate("/");
     } catch (err) {
-      console.error("[v0] Login error:", err);
+      console.error(" Login error:", err);
       setError(
         err.message ||
           err.error ||

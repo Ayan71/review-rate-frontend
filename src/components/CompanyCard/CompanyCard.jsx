@@ -4,6 +4,7 @@ import Button from "../Common/Button";
 import "./CompanyCard.css";
 
 const CompanyCard = ({ company, onDetailReview }) => {
+  console.log("[CompanyCard] Rendering company:", company);
   return (
     <div className="company-card">
       <div className="card-content">
