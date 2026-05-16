@@ -1,13 +1,17 @@
 import React from "react";
 import RatingStars from "../RatingStars/RatingStars";
 import Button from "../Common/Button";
-import { getCompanyRecordId } from "../../utils/companyList";
+import {
+  getCompanyRecordId,
+  getCompanyAverageRating,
+  getCompanyReviewCount,
+} from "../../utils/companyList";
 import "./CompanyCard.css";
 
 const CompanyCard = ({ company, onDetailReview }) => {
   const recordId = getCompanyRecordId(company);
-  const rating = company.averageRating ?? company.rating ?? 0;
-  const reviewCount = company.totalReviews ?? company.reviews ?? 0;
+  const rating = getCompanyAverageRating(company);
+  const reviewCount = getCompanyReviewCount(company);
 
   return (
     <div className="company-card">
@@ -27,9 +31,15 @@ const CompanyCard = ({ company, onDetailReview }) => {
           <p className="company-address">📍 {company.address}</p>
           <p className="company-description">{company.description}</p>
 
-          <div className="company-rating">
+          <div className="company-rating" aria-label="Rating and review count">
+            <span className="rating-inline-label">Avg rating</span>
             <RatingStars rating={rating} />
-            <span className="review-count">{reviewCount} Reviews</span>
+            <span className="review-count-sep" aria-hidden>
+              ·
+            </span>
+            <span className="review-count">
+              {reviewCount} {reviewCount === 1 ? "review" : "reviews"}
+            </span>
           </div>
         </div>
 

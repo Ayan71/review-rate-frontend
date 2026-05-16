@@ -30,10 +30,43 @@ export function companyMatchesSelectedCity(company, selectedCityLabel) {
   );
 }
 
+/** Numeric average rating for display/sort (API: averageRating). */
+export function getCompanyAverageRating(company) {
+  if (!company) return 0;
+  const raw =
+    company.averageRating ??
+    company.avgRating ??
+    company.average_rating ??
+    company.rating;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : 0;
+}
+
+/**
+ * Total review count (API: totalReviews). Never treats reviews[] as the numeric fallback.
+ */
+export function getCompanyReviewCount(company) {
+  if (!company) return 0;
+  if (company.totalReviews != null && company.totalReviews !== "") {
+    const n = Number(company.totalReviews);
+    if (Number.isFinite(n)) return Math.max(0, Math.floor(n));
+  }
+  if (company.reviewCount != null && company.reviewCount !== "") {
+    const n = Number(company.reviewCount);
+    if (Number.isFinite(n)) return Math.max(0, Math.floor(n));
+  }
+  if (Array.isArray(company.reviews)) return company.reviews.length;
+  if (typeof company.reviews === "number") {
+    const n = Number(company.reviews);
+    return Number.isFinite(n) ? Math.max(0, Math.floor(n)) : 0;
+  }
+  return 0;
+}
+
 export function sortCompanies(companies, sortBy) {
   const list = [...companies];
-  const ratingOf = (c) => Number(c.averageRating ?? c.rating ?? 0);
-  const reviewsOf = (c) => Number(c.totalReviews ?? c.reviews ?? 0);
+  const ratingOf = (c) => getCompanyAverageRating(c);
+  const reviewsOf = (c) => getCompanyReviewCount(c);
   const nameOf = (c) => String(c.companyName ?? c.name ?? "").toLowerCase();
 
   if (sortBy === "rating") {
