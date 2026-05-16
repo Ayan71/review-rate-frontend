@@ -1,27 +1,64 @@
 export function extractReviewsFromResponse(payload) {
   if (payload == null) return [];
-  const raw =
+
+  let raw =
     payload.reviews ??
     payload.data?.reviews ??
-    (Array.isArray(payload?.data) ? payload.data : undefined);
+    payload.result?.reviews;
+
+  if (
+    raw &&
+    typeof raw === "object" &&
+    !Array.isArray(raw) &&
+    Array.isArray(raw.docs)
+  ) {
+    raw = raw.docs;
+  }
+
   if (Array.isArray(raw)) return raw;
+  if (Array.isArray(payload?.data)) return payload.data;
   if (Array.isArray(payload)) return payload;
   return [];
 }
 
-/** Average + count from an array of review documents (e.g. GET /review/reviews). */
+/** Single review doc → 0–5 or null if unknown. */
+export function parseReviewRating(r) {
+  if (r == null) return null;
+  const candidates = [
+    r.rating,
+    r.Rating,
+    r.stars,
+    r.score,
+    r.starRating,
+    r.reviewRating,
+    r?.review?.rating,
+    r?.meta?.rating,
+  ];
+  for (const v of candidates) {
+    const n = Number(v);
+    if (Number.isFinite(n)) return Math.min(5, Math.max(0, n));
+  }
+  return null;
+}
+
+/**
+ * Average + count from review documents (GET /review/reviews).
+ * If docs exist but ratings are missing, still returns count with avg 0.
+ */
 export function getAggregatesFromReviewList(reviews) {
   if (!Array.isArray(reviews) || reviews.length === 0) return null;
   const ratings = [];
   for (const r of reviews) {
-    const val = Number(r?.rating ?? r?.stars ?? r?.score);
-    if (Number.isFinite(val))
-      ratings.push(Math.min(5, Math.max(0, val)));
+    const val = parseReviewRating(r);
+    if (val != null) ratings.push(val);
   }
-  if (!ratings.length) return null;
+  const totalReviews = reviews.length;
+  if (!ratings.length) {
+    return { averageRating: 0, totalReviews };
+  }
   const sum = ratings.reduce((a, b) => a + b, 0);
   return {
     averageRating: sum / ratings.length,
-    totalReviews: ratings.length,
+    totalReviews,
   };
 }

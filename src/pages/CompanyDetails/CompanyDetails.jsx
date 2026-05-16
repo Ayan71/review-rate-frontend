@@ -9,12 +9,12 @@ import {
   extractCompaniesFromResponse,
   findCompanyById,
 } from "../../utils/companyList";
-import { extractReviewsFromResponse, getAggregatesFromReviewList } from "../../utils/reviewList";
+import { extractReviewsFromResponse, getAggregatesFromReviewList, parseReviewRating } from "../../utils/reviewList";
 import { getCompanyReviewCount } from "../../utils/companyList";
 import { DEMO_REVIEWS } from "../../dummy/demoReviews";
 import "./CompanyDetails.css";
 
-const reviewRating = (r) => Number(r?.rating ?? r?.stars ?? 0);
+const reviewRating = (r) => parseReviewRating(r) ?? 0;
 const reviewTitle = (r) => r?.title ?? r?.reviewTitle ?? "";
 const reviewComment = (r) => r?.comment ?? r?.reviewComment ?? r?.text ?? "";
 const reviewAuthor = (r) =>
