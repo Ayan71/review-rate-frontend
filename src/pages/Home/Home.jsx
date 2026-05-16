@@ -51,7 +51,6 @@ const Home = () => {
       setCompanies(companiesData);
     } catch (error) {
       console.error("Error fetching companies:", error);
-      alert("Unable to fetch companies. Please check backend.");
       setCompanies([]);
     } finally {
       setLoading(false);
