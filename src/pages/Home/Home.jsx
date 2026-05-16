@@ -14,6 +14,7 @@ import "./Home.css";
 
 const Home = () => {
   const navigate = useNavigate();
+
   const [companies, setCompanies] = useState([]);
   const [selectedCity, setSelectedCity] = useState("All Cities");
   const [sortBy, setSortBy] = useState("name");
@@ -26,17 +27,26 @@ const Home = () => {
 
   const loadCompanies = async (city = "All Cities", sort = "name") => {
     setLoading(true);
+
     try {
-      // 👉 IMPORTANT FIX HERE
       const cityFilter = city === "All Cities" ? null : city;
 
-      const data = await getAllCompanies(cityFilter, sort);
-      console.log(" Companies loaded:", data);
+      const response = await getAllCompanies(cityFilter, sort);
 
-      setCompanies(data);
+      console.log("Companies loaded:", response);
+
+      // ✅ SAFE DATA EXTRACTION
+      const companiesData =
+        response?.data?.companies ||
+        response?.companies ||
+        response?.data ||
+        [];
+
+      setCompanies(Array.isArray(companiesData) ? companiesData : []);
     } catch (error) {
-      console.error(" Error fetching companies:", error);
-      alert("Unable to fetch companies. Please check your backend connection.");
+      console.error("Error fetching companies:", error);
+      alert("Unable to fetch companies. Please check backend.");
+      setCompanies([]);
     } finally {
       setLoading(false);
     }
@@ -54,15 +64,23 @@ const Home = () => {
 
   const handleNavbarSearch = async (query) => {
     setLoading(true);
+
     try {
       const cityFilter = selectedCity === "All Cities" ? null : selectedCity;
 
-      const data = await searchCompanies(query, cityFilter);
-      console.log(" Search results:", data);
+      const response = await searchCompanies(query, cityFilter);
 
-      setCompanies(data);
+      console.log("Search results:", response);
+
+      const searchData =
+        response?.data?.companies ||
+        response?.companies ||
+        response?.data ||
+        [];
+
+      setCompanies(Array.isArray(searchData) ? searchData : []);
     } catch (error) {
-      console.error(" Error searching companies:", error);
+      console.error("Error searching companies:", error);
       alert("Search failed. Please try again.");
     } finally {
       setLoading(false);
@@ -76,12 +94,13 @@ const Home = () => {
   const handleAddCompanySubmit = async (newCompany) => {
     try {
       const result = await createCompany(newCompany);
-      console.log(" Company created:", result);
+
+      console.log("Company created:", result);
 
       await loadCompanies(selectedCity, sortBy);
     } catch (error) {
-      console.error(" Error adding company:", error);
-      alert("Failed to add company. Please try again.");
+      console.error("Error adding company:", error);
+      alert("Failed to add company.");
     }
   };
 
@@ -113,11 +132,11 @@ const Home = () => {
 
           {loading ? (
             <div className="loading">Loading companies...</div>
-          ) : companies.length > 0 ? (
+          ) : Array.isArray(companies) && companies.length > 0 ? (
             <div className="companies-list">
               {companies.map((company) => (
                 <CompanyCard
-                  key={company.id}
+                  key={company._id || company.id}
                   company={company}
                   onDetailReview={handleDetailReview}
                 />
