@@ -9,7 +9,8 @@ import {
   extractCompaniesFromResponse,
   findCompanyById,
 } from "../../utils/companyList";
-import { extractReviewsFromResponse } from "../../utils/reviewList";
+import { extractReviewsFromResponse, getAggregatesFromReviewList } from "../../utils/reviewList";
+import { getCompanyReviewCount } from "../../utils/companyList";
 import { DEMO_REVIEWS } from "../../dummy/demoReviews";
 import "./CompanyDetails.css";
 
@@ -87,20 +88,27 @@ const CompanyDetails = () => {
     );
   }
 
+  const showingDemoReviews = Array.isArray(reviews) && reviews.length === 0;
+  const liveReviewStats =
+    !showingDemoReviews ? getAggregatesFromReviewList(reviews) : null;
+
   const summaryAvg =
+    liveReviewStats?.averageRating ??
     reviewSummary?.averageRating ??
     reviewSummary?.avgRating ??
     company?.averageRating ??
     company?.rating ??
     0;
-  const summaryTotal =
-    reviewSummary?.totalReviews ??
-    reviewSummary?.reviewCount ??
-    company?.totalReviews ??
-    company?.reviews ??
-    0;
 
-  const showingDemoReviews = Array.isArray(reviews) && reviews.length === 0;
+  const summaryTotalRaw =
+    liveReviewStats?.totalReviews ??
+    reviewSummary?.totalReviews ??
+    reviewSummary?.reviewCount;
+
+  const summaryTotal = Number.isFinite(Number(summaryTotalRaw))
+    ? Math.max(0, Math.floor(Number(summaryTotalRaw)))
+    : getCompanyReviewCount(company);
+
   const reviewsToDisplay = showingDemoReviews ? DEMO_REVIEWS : reviews;
 
   if (!company) {
@@ -166,7 +174,7 @@ const CompanyDetails = () => {
               </div>
 
               <div className="detail-item">
-                <label>Total Reviews</label>
+                <label>Reviews</label>
                 <div className="detail-value">
                   <span className="badge">{summaryTotal}</span>
                 </div>

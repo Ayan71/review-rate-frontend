@@ -1,32 +1,49 @@
 import React from "react";
+import "./RatingStars.css";
 
 const RatingStars = ({ rating }) => {
   const numeric =
     typeof rating === "number" && Number.isFinite(rating)
       ? rating
       : Number(rating);
-  const safeRating = Number.isFinite(numeric) ? Math.min(5, Math.max(0, numeric)) : 0;
+  const safeRating = Number.isFinite(numeric)
+    ? Math.min(5, Math.max(0, numeric))
+    : 0;
 
   const stars = [];
-  const fullStars = Math.floor(safeRating);
-  const hasHalfStar = safeRating % 1 !== 0;
-
   for (let i = 0; i < 5; i++) {
-    if (i < fullStars) {
-      stars.push(<span key={i} style={{ color: "#FFD700", fontSize: "18px" }}>★</span>);
-    } else if (i === fullStars && hasHalfStar) {
-      stars.push(<span key={i} style={{ color: "#FFD700", fontSize: "18px" }}>☆</span>);
+    const fullAt = i + 1;
+    const halfAt = i + 0.5;
+    const eps = 1e-4;
+
+    if (safeRating + eps >= fullAt) {
+      stars.push(
+        <span key={i} className="rating-stars__star rating-stars__full" aria-hidden>
+          ★
+        </span>
+      );
+    } else if (safeRating + eps >= halfAt) {
+      stars.push(
+        <span key={i} className="rating-stars__star rating-stars__half" aria-hidden>
+          <span className="rating-stars__half-bg">★</span>
+          <span className="rating-stars__half-fg-wrap">
+            <span className="rating-stars__half-fg">★</span>
+          </span>
+        </span>
+      );
     } else {
-      stars.push(<span key={i} style={{ color: "#DDD", fontSize: "18px" }}>★</span>);
+      stars.push(
+        <span key={i} className="rating-stars__star rating-stars__empty" aria-hidden>
+          ★
+        </span>
+      );
     }
   }
 
   return (
-    <div style={{ display: "flex", gap: "2px", alignItems: "center" }}>
+    <div className="rating-stars">
       {stars}
-      <span style={{ marginLeft: "8px", fontWeight: "600", fontSize: "14px", color: "#1a1a1a" }}>
-        {safeRating.toFixed(1)}
-      </span>
+      <span className="rating-stars__score">{safeRating.toFixed(1)}</span>
     </div>
   );
 };

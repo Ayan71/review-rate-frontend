@@ -15,6 +15,7 @@ import {
   companyMatchesSelectedCity,
   sortCompanies,
 } from "../../utils/companyList";
+import { enrichCompaniesWithReviewSummaries } from "../../api/services/reviewService";
 import "./Home.css";
 
 const Home = () => {
@@ -46,6 +47,7 @@ const Home = () => {
           companyMatchesSelectedCity(c, city)
         );
       }
+      companiesData = await enrichCompaniesWithReviewSummaries(companiesData);
       companiesData = sortCompanies(companiesData, sort);
 
       setCompanies(companiesData);
@@ -84,6 +86,7 @@ const Home = () => {
           companyMatchesSelectedCity(c, selectedCity)
         );
       }
+      searchData = await enrichCompaniesWithReviewSummaries(searchData);
       searchData = sortCompanies(searchData, sortBy);
 
       setCompanies(searchData);

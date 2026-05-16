@@ -30,9 +30,26 @@ export function companyMatchesSelectedCity(company, selectedCityLabel) {
   );
 }
 
-/** Numeric average rating for display/sort (API: averageRating). */
+/** Stats from embedded `company.reviews` when API populates review docs on the company. */
+export function getDerivedReviewStats(company) {
+  const list = company?.reviews;
+  if (!Array.isArray(list) || list.length === 0) return null;
+  const ratings = [];
+  for (const r of list) {
+    const val = Number(r?.rating ?? r?.stars ?? r?.score);
+    if (Number.isFinite(val))
+      ratings.push(Math.min(5, Math.max(0, val)));
+  }
+  if (!ratings.length) return null;
+  const sum = ratings.reduce((a, b) => a + b, 0);
+  return { averageRating: sum / ratings.length, totalReviews: ratings.length };
+}
+
+/** Numeric average rating for display/sort (API summary or embedded reviews). */
 export function getCompanyAverageRating(company) {
   if (!company) return 0;
+  const derived = getDerivedReviewStats(company);
+  if (derived) return derived.averageRating;
   const raw =
     company.averageRating ??
     company.avgRating ??
@@ -43,10 +60,12 @@ export function getCompanyAverageRating(company) {
 }
 
 /**
- * Total review count (API: totalReviews). Never treats reviews[] as the numeric fallback.
+ * Total review count (API: totalReviews). Uses embedded review docs only when present as objects with ratings.
  */
 export function getCompanyReviewCount(company) {
   if (!company) return 0;
+  const derived = getDerivedReviewStats(company);
+  if (derived) return derived.totalReviews;
   if (company.totalReviews != null && company.totalReviews !== "") {
     const n = Number(company.totalReviews);
     if (Number.isFinite(n)) return Math.max(0, Math.floor(n));
@@ -55,7 +74,6 @@ export function getCompanyReviewCount(company) {
     const n = Number(company.reviewCount);
     if (Number.isFinite(n)) return Math.max(0, Math.floor(n));
   }
-  if (Array.isArray(company.reviews)) return company.reviews.length;
   if (typeof company.reviews === "number") {
     const n = Number(company.reviews);
     return Number.isFinite(n) ? Math.max(0, Math.floor(n)) : 0;

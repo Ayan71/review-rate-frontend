@@ -51,6 +51,34 @@ export const getReviewSummary = async (companyId) => {
 };
 
 /**
+ * Merge GET /company/all rows with live review summaries so averageRating/totalReviews match reviews.
+ */
+export async function enrichCompaniesWithReviewSummaries(companies) {
+  if (!Array.isArray(companies) || companies.length === 0) return companies;
+
+  const settled = await Promise.allSettled(
+    companies.map((c) => {
+      const id = c._id ?? c.id;
+      if (id == null) return Promise.resolve(null);
+      return getReviewSummary(id);
+    })
+  );
+
+  return companies.map((c, i) => {
+    const res = settled[i];
+    if (res.status !== "fulfilled" || res.value == null) return c;
+
+    const s = res.value;
+    const avg = Number(s.averageRating ?? s.avgRating);
+    const total = Number(s.totalReviews ?? s.reviewCount);
+    const next = { ...c };
+    if (Number.isFinite(total)) next.totalReviews = Math.max(0, Math.floor(total));
+    if (Number.isFinite(avg)) next.averageRating = avg;
+    return next;
+  });
+}
+
+/**
  * Get all reviews for a company
  * @param {string|number} companyId - Company ID
  * @returns {Promise<Array>} List of reviews
