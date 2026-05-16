@@ -9,7 +9,19 @@ import {
   extractCompaniesFromResponse,
   findCompanyById,
 } from "../../utils/companyList";
+import { extractReviewsFromResponse } from "../../utils/reviewList";
+import { DEMO_REVIEWS } from "../../dummy/demoReviews";
 import "./CompanyDetails.css";
+
+const reviewRating = (r) => Number(r?.rating ?? r?.stars ?? 0);
+const reviewTitle = (r) => r?.title ?? r?.reviewTitle ?? "";
+const reviewComment = (r) => r?.comment ?? r?.reviewComment ?? r?.text ?? "";
+const reviewAuthor = (r) =>
+  r?.reviewerName ??
+  r?.userName ??
+  r?.author ??
+  r?.name ??
+  "Anonymous";
 
 const CompanyDetails = () => {
   const { id } = useParams();
@@ -48,9 +60,10 @@ const CompanyDetails = () => {
           try {
             const reviewsData = await getCompanyReviews(id);
             console.log(" Company reviews loaded:", reviewsData);
-            setReviews(reviewsData);
+            setReviews(extractReviewsFromResponse(reviewsData));
           } catch (err) {
             console.warn(" Could not fetch company reviews:", err);
+            setReviews([]);
           }
         }
       } catch (error) {
@@ -73,6 +86,22 @@ const CompanyDetails = () => {
       </div>
     );
   }
+
+  const summaryAvg =
+    reviewSummary?.averageRating ??
+    reviewSummary?.avgRating ??
+    company?.averageRating ??
+    company?.rating ??
+    0;
+  const summaryTotal =
+    reviewSummary?.totalReviews ??
+    reviewSummary?.reviewCount ??
+    company?.totalReviews ??
+    company?.reviews ??
+    0;
+
+  const showingDemoReviews = Array.isArray(reviews) && reviews.length === 0;
+  const reviewsToDisplay = showingDemoReviews ? DEMO_REVIEWS : reviews;
 
   if (!company) {
     return (
@@ -132,18 +161,14 @@ const CompanyDetails = () => {
               <div className="detail-item">
                 <label>Rating</label>
                 <div className="detail-value">
-                  <RatingStars
-                    rating={company.averageRating ?? company.rating ?? 0}
-                  />
+                  <RatingStars rating={Number(summaryAvg) || 0} />
                 </div>
               </div>
 
               <div className="detail-item">
                 <label>Total Reviews</label>
                 <div className="detail-value">
-                  <span className="badge">
-                    {company.totalReviews ?? company.reviews ?? 0}
-                  </span>
+                  <span className="badge">{summaryTotal}</span>
                 </div>
               </div>
 
@@ -164,12 +189,31 @@ const CompanyDetails = () => {
 
             <div className="reviews-section">
               <h2>Recent Reviews</h2>
-              <div className="review-placeholder">
-                No reviews to display yet. Add a review to be the first!
-              </div>
-              <Button variant="primary">
-                Write a Review
-              </Button>
+              {showingDemoReviews && (
+                <p className="reviews-demo-hint">
+                  Sample reviews (demo) — yahan real reviews tab dikhenge jab backend par
+                  submit ho jayenge.
+                </p>
+              )}
+              <ul className="reviews-list">
+                {reviewsToDisplay.map((rev) => (
+                  <li key={rev._id ?? rev.id} className="review-card">
+                    <div className="review-card-head">
+                      <RatingStars rating={reviewRating(rev)} />
+                      <span className="review-card-author">
+                        {reviewAuthor(rev)}
+                      </span>
+                    </div>
+                    {reviewTitle(rev) && (
+                      <h3 className="review-card-title">{reviewTitle(rev)}</h3>
+                    )}
+                    {reviewComment(rev) && (
+                      <p className="review-card-comment">{reviewComment(rev)}</p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+              <Button variant="primary">Write a Review</Button>
             </div>
           </div>
         </div>

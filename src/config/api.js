@@ -22,6 +22,6 @@ export const API_ENDPOINTS = {
   REVIEW: {
     CREATE: "/api/review/create",
     GET_SUMMARY: (companyId) => `/api/review/summary/${companyId}`,
-    GET_REVIEWS: (companyId) => `/api/review/summary/reviews/${companyId}`,
+    GET_REVIEWS: (companyId) => `/api/review/reviews/${companyId}`,
   },
 };
