@@ -5,6 +5,10 @@ import RatingStars from "../../components/RatingStars/RatingStars";
 import Button from "../../components/Common/Button";
 import { getAllCompanies } from "../../api/services/companyServiceAPI";
 import { getCompanyReviews, getReviewSummary } from "../../api/services/reviewService";
+import {
+  extractCompaniesFromResponse,
+  findCompanyById,
+} from "../../utils/companyList";
 import "./CompanyDetails.css";
 
 const CompanyDetails = () => {
@@ -23,8 +27,9 @@ const CompanyDetails = () => {
     const fetchCompanyData = async () => {
       try {
         // Fetch company details from API
-        const companies = await getAllCompanies();
-        const companyData = companies.find((c) => c.id === parseInt(id));
+        const response = await getAllCompanies();
+        const companies = extractCompaniesFromResponse(response);
+        const companyData = findCompanyById(companies, id);
         
         if (companyData) {
           console.log(" Company loaded:", companyData);
@@ -101,8 +106,16 @@ const CompanyDetails = () => {
 
         <div className="details-card">
           <div className="details-header">
-            <div className="details-logo" style={{ backgroundColor: company.logoColor }}>
-              {company.logo}
+            <div
+              className="details-logo"
+              style={{
+                backgroundColor: company.logoColor || "#2a2a2a",
+              }}
+            >
+              {company.logo ||
+                (company.companyName || company.name || "?")
+                  .charAt(0)
+                  .toUpperCase()}
             </div>
 
             <div className="details-title">
@@ -119,14 +132,18 @@ const CompanyDetails = () => {
               <div className="detail-item">
                 <label>Rating</label>
                 <div className="detail-value">
-                  <RatingStars rating={company.rating} />
+                  <RatingStars
+                    rating={company.averageRating ?? company.rating ?? 0}
+                  />
                 </div>
               </div>
 
               <div className="detail-item">
                 <label>Total Reviews</label>
                 <div className="detail-value">
-                  <span className="badge">{company.reviews}</span>
+                  <span className="badge">
+                    {company.totalReviews ?? company.reviews ?? 0}
+                  </span>
                 </div>
               </div>
 

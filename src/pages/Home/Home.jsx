@@ -10,6 +10,11 @@ import {
   createCompany,
 } from "../../api/services/companyServiceAPI";
 import { citiesData } from "../../dummy/companies";
+import {
+  extractCompaniesFromResponse,
+  companyMatchesSelectedCity,
+  sortCompanies,
+} from "../../utils/companyList";
 import "./Home.css";
 
 const Home = () => {
@@ -35,14 +40,15 @@ const Home = () => {
 
       console.log("Companies loaded:", response);
 
-      // ✅ SAFE DATA EXTRACTION
-      const companiesData =
-        response?.data?.companies ||
-        response?.companies ||
-        response?.data ||
-        [];
+      let companiesData = extractCompaniesFromResponse(response);
+      if (city !== "All Cities") {
+        companiesData = companiesData.filter((c) =>
+          companyMatchesSelectedCity(c, city)
+        );
+      }
+      companiesData = sortCompanies(companiesData, sort);
 
-      setCompanies(Array.isArray(companiesData) ? companiesData : []);
+      setCompanies(companiesData);
     } catch (error) {
       console.error("Error fetching companies:", error);
       alert("Unable to fetch companies. Please check backend.");
@@ -72,13 +78,15 @@ const Home = () => {
 
       console.log("Search results:", response);
 
-      const searchData =
-        response?.data?.companies ||
-        response?.companies ||
-        response?.data ||
-        [];
+      let searchData = extractCompaniesFromResponse(response);
+      if (selectedCity !== "All Cities") {
+        searchData = searchData.filter((c) =>
+          companyMatchesSelectedCity(c, selectedCity)
+        );
+      }
+      searchData = sortCompanies(searchData, sortBy);
 
-      setCompanies(Array.isArray(searchData) ? searchData : []);
+      setCompanies(searchData);
     } catch (error) {
       console.error("Error searching companies:", error);
       alert("Search failed. Please try again.");
@@ -119,6 +127,7 @@ const Home = () => {
       <main className="home-container">
         <SearchBar
           cities={citiesData}
+          selectedCity={selectedCity}
           onSearch={handleSearch}
           onAddCompany={handleAddCompany}
           onSortChange={handleSortChange}

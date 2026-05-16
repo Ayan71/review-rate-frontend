@@ -4,12 +4,15 @@ import "./SearchBar.css";
 
 const SearchBar = ({ 
   cities, 
+  selectedCity: selectedCityProp,
   onSearch, 
   onAddCompany,
   onSortChange,
   selectedSort 
 }) => {
-  const [selectedCity, setSelectedCity] = useState(cities[0] || "");
+  const [selectedCity, setSelectedCity] = useState(
+    selectedCityProp ?? cities[0] ?? ""
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef(null);
@@ -17,6 +20,12 @@ const SearchBar = ({
   const filteredCities = cities.filter((city) =>
     city.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  useEffect(() => {
+    if (selectedCityProp != null) {
+      setSelectedCity(selectedCityProp);
+    }
+  }, [selectedCityProp]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -90,6 +99,7 @@ const SearchBar = ({
 
         <Button 
           variant="primary"
+          size="small"
           onClick={handleFindCompany}
           className="find-btn"
         >
@@ -98,6 +108,7 @@ const SearchBar = ({
 
         <Button 
           variant="primary"
+          size="small"
           onClick={onAddCompany}
           className="add-btn"
         >

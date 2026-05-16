@@ -61,14 +61,11 @@
   pointer-events: none;
 }
 
-.find-btn {
-  padding: 10px 20px;
-  height: 40px;
-}
-
+.find-btn,
 .add-btn {
-  padding: 10px 20px;
-  height: 40px;
+  padding: 6px 14px !important;
+  min-height: 34px;
+  font-size: 12px !important;
 }
 
 .sort-group {

@@ -1,15 +1,25 @@
 import React from "react";
 import RatingStars from "../RatingStars/RatingStars";
 import Button from "../Common/Button";
+import { getCompanyRecordId } from "../../utils/companyList";
 import "./CompanyCard.css";
 
 const CompanyCard = ({ company, onDetailReview }) => {
-  console.log("[CompanyCard] Rendering company:", company);
+  const recordId = getCompanyRecordId(company);
+  const rating = company.averageRating ?? company.rating ?? 0;
+  const reviewCount = company.totalReviews ?? company.reviews ?? 0;
+
   return (
     <div className="company-card">
       <div className="card-content">
-        <div className="company-logo" style={{ backgroundColor: company.logoColor }}>
-          {company?.logo}
+        <div
+          className="company-logo"
+          style={{
+            backgroundColor: company.logoColor || "#2a2a2a",
+          }}
+        >
+          {company?.logo ||
+            (company.companyName || company.name || "?").charAt(0).toUpperCase()}
         </div>
 
         <div className="company-info">
@@ -18,8 +28,8 @@ const CompanyCard = ({ company, onDetailReview }) => {
           <p className="company-description">{company.description}</p>
 
           <div className="company-rating">
-            <RatingStars rating={company.rating} />
-            <span className="review-count">{company.reviews} Reviews</span>
+            <RatingStars rating={rating} />
+            <span className="review-count">{reviewCount} Reviews</span>
           </div>
         </div>
 
@@ -30,10 +40,10 @@ const CompanyCard = ({ company, onDetailReview }) => {
           <Button 
             variant="secondary"
             size="small"
-            onClick={() => onDetailReview(company.id)}
+            onClick={() => recordId != null && onDetailReview(recordId)}
             className="detail-btn"
           >
-            Detail Review
+            Details / Review
           </Button>
         </div>
       </div>
