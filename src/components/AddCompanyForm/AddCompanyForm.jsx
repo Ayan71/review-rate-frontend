@@ -200,7 +200,7 @@ const AddCompanyForm = ({ cities, onSubmit, onClose }) => {
             />
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <label htmlFor="image">Company Image (Optional)</label>
             {imagePreview && (
               <div className="image-preview">
@@ -216,7 +216,7 @@ const AddCompanyForm = ({ cities, onSubmit, onClose }) => {
               className="form-input"
             />
             <small className="form-hint">Accepted formats: JPG, PNG, GIF (Max 5MB)</small>
-          </div>
+          </div> */}
 
 
           <div className="form-actions">

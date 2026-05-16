@@ -39,8 +39,6 @@ const Home = () => {
 
       const response = await getAllCompanies(cityFilter, sort);
 
-      console.log("Companies loaded:", response);
-
       let companiesData = extractCompaniesFromResponse(response);
       if (city !== "All Cities") {
         companiesData = companiesData.filter((c) =>
